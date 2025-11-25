@@ -1,5 +1,5 @@
 <div align="center">
-    <img width="350" alt="Depthtective Logo" src="https://github.com/user-attachments/assets/8f2f908d-3252-4973-9c6d-c499e54bcb4b" />
+    <img width="350" alt="Depthtective Logo" src="https://github.com/user-attachments/assets/12e098f2-8ce0-47d9-8b22-4ba55be05c91" />
     <p>Official implementation of the method described in: <br>
     <em>“Depthtective: A Depth-Aware Framework for Spatio-Temporal Deepfake Detection”</em></p>
 
@@ -40,7 +40,7 @@ A second formulation adopts a contrastive representation learning approach.
 The CNN is trained using a Triplet Loss to produce embeddings in which real and fake samples occupy well-separated regions of the latent space. A lightweight MLP head is then trained on top of the frozen encoder.  
 This strategy enhances separability especially for challenging manipulations such as NeuralTextures, where the artifacts are subtle and stochastic.
 
-<p align="center"><img width="600" alt="pipelineContrastiveLearning_en" src="https://github.com/user-attachments/assets/b0d4c3c0-b6d1-4cb4-965d-fbee7bac5c0f" /></p>
+<p align="center"><img width="600" alt="pipelineContrastiveLearning_en" src="https://github.com/user-attachments/assets/bfed617a-9963-4ff9-9729-34d4c96dc054" /></p>
 
 ---
 
@@ -52,15 +52,15 @@ The effectiveness of Depthtective has been validated through experiments on the 
   <table>
     <tr>
       <td align="center" width="33%">
-        <img src="https://github.com/user-attachments/assets/7e93a6b9-f21c-4a40-acd8-6b9e16967116" alt="Xception Performance" width="100%" />
+        <img src="https://github.com/user-attachments/assets/97458109-c12d-44bd-ac22-f4e2fa0b7137" width="100%" />
         <br><b>Xception</b>
       </td>
       <td align="center" width="33%">
-        <img src="https://github.com/user-attachments/assets/5b4209b7-223e-49cd-aee6-4a7ce5f1e272" alt="ResNet Performance" width="100%" />
+        <img src="https://github.com/user-attachments/assets/a2f096bf-a781-4916-9a4c-9b78078e0702" alt="ResNet Performance" width="100%" />
         <br><b>ResNet50</b>
       </td>
       <td align="center" width="33%">
-        <img src="https://github.com/user-attachments/assets/7eb3bf05-6357-4451-a404-f597c1a2ee89" alt="Contrastive Learning Performance" width="100%" />
+        <img src="https://github.com/user-attachments/assets/be047832-8b26-4a48-80c2-1ae9a4d1bfb6" alt="Contrastive Learning Performance" width="100%" />
         <br><b>Contrastive Learning</b>
       </td>
     </tr>
