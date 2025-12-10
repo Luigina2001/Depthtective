@@ -111,18 +111,3 @@ Video: test_video.mp4
 Prediction: Deepfake
 Confidence: 98.45%
 ```
-
----
-
-## Citation
-
-If you find this framework useful for your research, please consider citing our work (BibTeX will be updated upon publication):
-
-```
-@article{depthtective2025,
-  title={Depthtective: A Depth-Aware Framework for Spatio-Temporal Deepfake Detection},
-  author={Bisogni, Carmen and Costante, Luigina and Nappi, Michele and Pero, Chiara},
-  journal={Submitted to ICPR},
-  year={2026}
-}
-```
