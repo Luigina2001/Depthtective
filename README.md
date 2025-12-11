@@ -4,14 +4,13 @@
     <em>“Depthtective: A Depth-Aware Framework for Spatio-Temporal Deepfake Detection”</em></p>
 
 ![](https://img.shields.io/badge/Status-Under_Review-yellow)
-![](https://img.shields.io/badge/Submission-ICPR_2026-blue)
 </div>
 
 <br>
 
 > [!WARNING]
 > **Code Release Status:**
-> This paper has been submitted to the **28th International Conference on Pattern Recognition (ICPR 2026)**. The full source code and pre-trained models will be released publicly **after the first review notification**.
+> This paper is currently **under review**. The full source code and pre-trained models will be released publicly **after the first review notification**.
 >
 > The documentation below serves as a preview of the framework's usage.
 > 
