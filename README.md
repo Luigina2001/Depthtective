@@ -18,26 +18,24 @@
 
 ## Overview
 
-Depthtective is a data-efficient framework for the detection of manipulated facial videos based on the analysis of spatio-temporal inconsistencies in estimated depth. The method draws on the observation that modern deepfake generation techniques, while photorealistic, exhibit subtle violations of geometric coherence that become evident when comparing depth estimates between temporally adjacent frames.
+Depthtective is a data-efficient framework for the detection of manipulated facial videos based on the analysis of spatio-temporal inconsistencies in estimated depth. As the deepfake detection community races toward data-hungry architectures, Depthtective moves away from exhaustive temporal sequence processing. 
 
-Instead of relying on heavy temporal models such as 3D CNNs or Transformers, Depthtective focuses on the temporal residuals between two consecutive frames. The absolute differences in both RGB and depth domains are fused into a compact four-channel tensor that exposes motion-related inconsistencies and geometric distortions introduced by manipulation. This representation enables accurate video-level classification without the need for extended temporal sequences.
+Instead of relying on heavy temporal models such as 3D CNNs or Transformers, the method exposes manipulations using only **two adjacent frames**, a minimal temporal unit abundantly available in any standard video stream. The absolute differences in both RGB and depth domains are fused into a four-channel tensor that exposes motion-related inconsistencies and geometric distortions introduced by manipulation. This representation enables highly accurate video-level classification across diverse datasets (FaceForensics++, Celeb-DF, and DFDC) without the need for extended temporal sequences.
 
 ---
 
 ## Method
 
 ### Residual Representation  
-For each pair of aligned frames, a depth map is estimated through MiDaS (DPT-Large).  
-The temporal variation in appearance and geometry is quantified through the absolute inter-frame residuals in RGB and depth. Their fusion forms a four-channel tensor (RGBD residual) that serves as the sole input to the classifier.
+For each pair of consecutive frames, facial landmarks are extracted (MediaPipe FaceMesh) to geometrically align the faces. A depth map is then estimated for both frames using the strong zero-shot capabilities of MiDaS (DPT-Large).  
+The temporal variation in appearance and geometry is quantified through the absolute inter-frame residuals in RGB and depth. Their fusion forms a compact **four-channel tensor (RGBD residual)** that serves as the sole input to the classifier.
 
 ### Classification Pipeline  
-The residual tensor is processed by an adapted Xception or ResNet50 architecture supporting four-channel input while retaining ImageNet pretraining. The network is fine-tuned to discriminate between authentic and manipulated videos using a standard binary classification objective.  
-Despite its simplicity, this formulation captures the core temporal inconsistencies typical of deepfake generation.
+The 4C residual tensor is processed by an adapted Xception or ResNet50 architecture. To retain ImageNet pretraining, the weights corresponding to the RGB channels are preserved, whereas the weights for the depth channel are initialized as the average of the three RGB kernels. The network is fine-tuned to discriminate between authentic and manipulated videos. Despite its simplicity and low computational cost (~23M parameters, ~8.4 GFLOPs), this formulation successfully captures the core temporal inconsistencies typical of deepfakes.
 
 ### Contrastive Variant  
-A second formulation adopts a contrastive representation learning approach.  
-The CNN is trained using a Triplet Loss to produce embeddings in which real and fake samples occupy well-separated regions of the latent space. A lightweight MLP head is then trained on top of the frozen encoder.  
-This strategy enhances separability especially for challenging manipulations such as NeuralTextures, where the artifacts are subtle and stochastic.
+To handle high-quality manipulations and severe compression artifacts (e.g., DFDC, Celeb-DF, NeuralTextures), a second formulation adopts a contrastive representation learning approach.  
+The CNN backbone is optimized using a Triplet Loss, encouraging compact intra-class clusters and maximizing inter-class separation in the latent space. A lightweight MLP head is then trained on top of the frozen encoder.
 
 <p align="center"><img width="600" alt="pipelineContrastiveLearning_en" src="https://github.com/user-attachments/assets/bfed617a-9963-4ff9-9729-34d4c96dc054" /></p>
 
@@ -45,26 +43,16 @@ This strategy enhances separability especially for challenging manipulations suc
 
 ## Performance Highlights
 
-The effectiveness of Depthtective has been validated through experiments on the **FaceForensics++ (FF++)** benchmark (C23 compression) and the **Celeb-DF (v2)** dataset. We report the performance of our method implemented with standard CNN backbones (Xception, ResNet50) and the Contrastive Learning variant. The radar charts below illustrate the Accuracy, F1-Score, and Area Under the Curve (AUC) across all manipulation types.
+Depthtective has been evaluated on three major benchmarks: **FaceForensics++ (FF++)** (C23 compression), **Celeb-DF (v2)**, and **Deepfake Detection Challenge (DFDC)**. 
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center" width="33%">
-        <img src="https://github.com/user-attachments/assets/97458109-c12d-44bd-ac22-f4e2fa0b7137" width="100%" />
-        <br><b>Xception</b>
-      </td>
-      <td align="center" width="33%">
-        <img src="https://github.com/user-attachments/assets/a2f096bf-a781-4916-9a4c-9b78078e0702" alt="ResNet Performance" width="100%" />
-        <br><b>ResNet50</b>
-      </td>
-      <td align="center" width="33%">
-        <img src="https://github.com/user-attachments/assets/be047832-8b26-4a48-80c2-1ae9a4d1bfb6" alt="Contrastive Learning Performance" width="100%" />
-        <br><b>Contrastive Learning</b>
-      </td>
-    </tr>
-  </table>
-</div>
+### Quantitative Results
+The proposed approach competes with much heavier spatio-temporal architectures:
+*   **Celeb-DF (v2):** The contrastive learning variant achieves an **AUC of 97.26%** and an Accuracy of 92.31%, demonstrating remarkable generalization on high-quality, smoothed deepfakes.
+*   **DFDC:** Under highly variable, in-the-wild conditions and heavy compression, the contrastive module provides a massive boost, reaching an **AUC of 98.35%** and an Accuracy of 97.03%.
+*   **FaceForensics++:** The baseline Xception achieves ~96.88% accuracy on Deepfakes. For the notoriously subtle NeuralTextures manipulation, the contrastive variant pushes accuracy to 89.01%.
+
+### Explainability
+Grad-CAM analysis confirms that Depthtective bases its decisions on valid spatio-temporal anomalies rather than contextual biases. The network consistently concentrates its attention on internal facial features—particularly the highly dynamic **nose and mouth regions**, where generative models frequently struggle to preserve geometric consistency.
 
 ---
 
